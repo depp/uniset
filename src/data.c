@@ -135,7 +135,7 @@ datafile_read_raw(struct datafile *restrict f,
     return r;
 }
 
-unsigned int
+static unsigned int
 hex_digit(unsigned int x)
 {
     if (x >= '0' && x <= '9')
@@ -147,7 +147,7 @@ hex_digit(unsigned int x)
     return 16;
 }
 
-void
+static void
 datafile_decode_range(unsigned int *first, unsigned int *last,
                       unsigned char *start, unsigned char *end)
 {

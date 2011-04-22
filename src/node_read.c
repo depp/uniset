@@ -27,13 +27,6 @@ node_tokcmp(struct token *restrict t, char const *s)
     return t->datap + l == t->datae && !memcmp(t->datap, s, l);
 }
 
-int
-node_tokpfx(struct token *restrict t, char const *s)
-{
-    size_t l = strlen(s);
-    return (size_t)(t->datae - t->datap) >= l && !memcmp(t->datap, s, l);
-}
-
 static void
 node_read_token(struct tokenizer *restrict t)
 {
