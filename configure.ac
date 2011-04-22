@@ -1,0 +1,10 @@
+AC_PREREQ(2.61)
+AC_INIT([uniset], [0.1], [depp@zdome.net])
+AM_INIT_AUTOMAKE
+AC_CONFIG_SRCDIR([src/token.h])
+AC_CONFIG_FILES([Makefile])
+
+AC_PROG_CC_C99
+ENABLE_WARNINGS
+
+AC_OUTPUT
