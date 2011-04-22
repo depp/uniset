@@ -1,0 +1,46 @@
+Uniset: Hacking
+===============
+
+How to compile from Git repository for hacking:
+
+    $ git clone http://git.moria.us/uniset.git/
+    $ cd uniset
+    $ autoreconf -i
+    $ ./configure --enable-warnings=-Werror CFLAGS='-O0 -ggdb'
+    $ make
+
+Requirements
+------------
+
+* GNU Autotools
+* C99 compiler (both GCC and Clang are supported)
+* A copy of the Unicode data files
+
+Code style
+----------
+
+Use a style similar to K&R.  Indentation is four spaces.  Limit width
+to 78 columns.  Function return types go on a separate line.  Within
+parentheses, line up indentation with the parentheses.  On expressions
+split across multiple lines, put operators at the ends of the lines.
+
+Errors are handled by printing a message to stderr and aborting the
+program.
+
+The program should be Valgrind-clean and should not generate warning
+messages during compilation.  Both statements should hold with both
+GCC and clang at all optimization levels.  As stated above, developers
+should use '-Werror' when compiling.  Do not put '-Werror' in CFLAGS,
+it will cause the 'configure' script to break.
+
+Unused argument warnings are suppressed as follows:
+
+    void
+    my_cool_function(int unused_param)
+    {
+        (void)unused_param;
+    }
+
+Future versions of compilers may introduce new warning diagnostics.
+C'est la vie.  Fix them as they appear rather than disabling the
+warning.
