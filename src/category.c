@@ -90,12 +90,12 @@ category_makeset(unsigned int n, unsigned char **names)
     for (i = 0; i < n; ++i) {
         c = category_decode(names[i]);
         if (c == (category_t)-1) {
-            fprintf(stderr, "Invalid category: %s", (char *)names[i]);
+            fprintf(stderr, "Invalid category: %s\n", (char *)names[i]);
             exit(1);
         }
         m = 1U << (unsigned)c;
         if (s & m) {
-            fprintf(stderr, "Warning: duplicate category %s",
+            fprintf(stderr, "Warning: duplicate category %s\n",
                     (char *)names[i]);
         }
         s |= m;
