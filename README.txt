@@ -1,5 +1,5 @@
-Uniset -- Compute sets of unicode code points
-=============================================
+Uniset: Compute sets of unicode code points
+===========================================
 
 Uniset is a simple command-line tool for computing sets of Unicode
 code points.  Its main goal is to support the development of fast
@@ -183,7 +183,7 @@ The '--32' option specifies a C-style array of 32-bit unsigned
 integers.  Each entry is a range of characters.  NOTE: This option is
 not currently implemented.
 
-    $ uniset --16 cat:Zs
+    $ uniset --32 cat:Zs
     { 32, 32 },
     { 160, 160 },
     { 5760, 5760 },
