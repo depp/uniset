@@ -1,6 +1,7 @@
 #include "node.h"
 #include "set.h"
 #include "category.h"
+#include "eaw.h"
 #include <stdlib.h>
 
 struct set *
@@ -12,6 +13,8 @@ node_eval(struct node *n)
         return set_range(n->range.first, n->range.last);
     case NODE_CATEGORY:
         return category_getchars2(n->strlist.length, n->strlist.list);
+    case NODE_EAW:
+        return eaw_getchars2(n->strlist.length, n->strlist.list);
     case NODE_NOT:
         x = node_eval(n->oper.x);
         return set_complement(x);
