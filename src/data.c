@@ -109,8 +109,8 @@ datafile_read_line(unsigned char *ptr, unsigned char *end,
     if (fields[0].ptr == fields[0].end)
         nf = 0;
     for (i = nf; i < MAX_FIELDS; ++i) {
-        fields[nf].ptr = 0;
-        fields[nf].end = 0;
+        fields[i].ptr = 0;
+        fields[i].end = 0;
     }
     return nf;
 }
@@ -163,17 +163,17 @@ datafile_decode_range(unsigned int *first, unsigned int *last,
     }
     if (ptr == start || v1 > 0x10ffff)
         goto err;
-    if (ptr != end && *ptr == '.') {
-        ptr++;
-        if (ptr != end && *ptr == '.') {
-            ptr++;
-        } else
-            goto err;
-    } else {
+    if (ptr == end) {
         *first = v1;
         *last = v1;
         return;
     }
+    if (*ptr != '.')
+        goto err;
+    ptr++;
+    if (ptr == end && *ptr == '.')
+        goto err;
+    ptr++;
     p2 = ptr;
     v2 = 0;
     while (ptr != end) {
@@ -233,7 +233,7 @@ datafile_read(struct datafile *restrict f,
             return r;
         }
     }
-    datafile_decode_range(first, last, fields[0].ptr, fields[1].end);
+    datafile_decode_range(first, last, fields[0].ptr, fields[0].end);
     return r;
 err:
     fputs("Invalid format of unicode data file\n", stderr);
