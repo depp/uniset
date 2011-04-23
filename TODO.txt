@@ -1,0 +1,13 @@
+Uniset: TODO list
+=================
+
+* Parse other character attributes besides General Category
+* Obviate the need to specify UNICODE_DIR environment variable
+* Add --32 output format
+* Add --version option
+* Write some unit tests
+* Improve error messages for syntax errors
+* Remove need for spaces around operators (maybe?)
+* Fix up --help option
+* Write man page
+* Write explanation of how to write a Unicode-aware parser
