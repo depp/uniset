@@ -3,11 +3,19 @@ Uniset: Hacking
 
 How to compile from Git repository for hacking:
 
-    $ git clone http://git.moria.us/uniset.git/
+    $ git clone git://github.com/depp/uniset.git
     $ cd uniset
     $ autoreconf -i
     $ ./configure --enable-warnings=-Werror CFLAGS='-O0 -ggdb'
     $ make
+
+A backup repository is can be found at the following URL:
+
+    http://git.moria.us/uniset.git
+
+Report bugs to the maintainer:
+
+    Dietrich Epp <depp@zdome.net>
 
 Requirements
 ------------
