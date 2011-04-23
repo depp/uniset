@@ -1,3 +1,6 @@
+struct set;
+struct map;
+
 typedef enum {
     /* Letter */
     CAT_Lu,
@@ -46,6 +49,9 @@ category_decode(unsigned char const *name);
 
 unsigned int
 category_makeset(unsigned int n, unsigned char **names);
+
+struct map *
+category_getmap(void);
 
 struct set *
 category_getchars(unsigned int catset);

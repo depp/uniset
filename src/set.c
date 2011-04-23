@@ -14,6 +14,15 @@ set_create(unsigned int length)
 }
 
 struct set *
+set_resize(struct set *s, unsigned int size)
+{
+    size_t sz = sizeof(struct set) + sizeof(struct range) * size;
+    struct set *ns = realloc(s, sz);
+    if (!ns) err(1, "malloc");
+    return ns;
+}
+
+struct set *
 set_range(unsigned int first, unsigned int last)
 {
     struct set *s = set_create(1);
@@ -168,4 +177,30 @@ set_complement(struct set *x)
     z->length = zp - z->r;
     free(x);
     return z;
+}
+
+void
+setbuilder_init(struct setbuilder *restrict s)
+{
+    s->alloc = 0;
+    s->size = 0;
+    s->cfirst = -1;
+    s->clast = -1;
+    s->set = 0;
+}
+
+void
+setbuilder_destroy(struct setbuilder *restrict s)
+{
+    free(s->set);
+}
+
+struct set *
+setbuilder_finish(struct setbuilder *restrict s)
+{
+    setbuilder_insert(s, 0x200000, 0x200000);
+    struct set *ss = s->set ? s->set : set_create(0);
+    ss->length = s->size;
+    s->set = 0;
+    return ss;
 }

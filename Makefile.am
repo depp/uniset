@@ -8,6 +8,8 @@ uniset_SOURCES = \
 	src/category.c \
 	src/data.h \
 	src/data.c \
+	src/map.h \
+	src/map.c \
 	src/node.h \
 	src/node_eval.c \
 	src/node_print.c \

@@ -1,6 +1,7 @@
 #include "category.h"
 #include "data.h"
 #include "set.h"
+#include "map.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -102,80 +103,25 @@ category_makeset(unsigned int n, unsigned char **names)
     return s;
 }
 
-struct category_enumerator {
+struct map *
+category_getmap(void)
+{
+    struct mapbuilder m;
     struct datafile *fl;
-    unsigned int lastc;
-    category_t cat;
-    unsigned int first, last;
-};
-
-static void
-category_enumerator_init(struct category_enumerator *restrict e)
-{
-    e->fl = datafile_open("UnicodeData.txt");
-    e->lastc = -1;
-    e->cat = -1;
-    e->first = 0;
-    e->last = 0;
-}
-
-static void
-category_enumerator_destroy(struct category_enumerator *restrict e)
-{
-    if (e->fl)
-        datafile_close(e->fl);
-}
-
-static int
-category_enumerator_next(struct category_enumerator *restrict e,
-                         unsigned int *first, unsigned int *last,
-                         category_t *category)
-{
-    unsigned int fr, la, r;
-    category_t c;
     struct field f[MAX_FIELDS];
-    if (e->cat != (category_t)-1) {
-        *category = e->cat;
-        *first = e->first;
-        *last = e->last;
-        e->cat = -1;
-        return 1;
-    }
-    if (!e->fl)
-        return 0;
-    r = datafile_read(e->fl, &fr, &la, f);
-    if (!r) {
-        datafile_close(e->fl);
-        e->fl = 0;
-        if (e->lastc < 0x10ffff) {
-            *first = e->lastc + 1;
-            *last = 0x10ffff;
-            *category = CAT_Cn;
-            return 1;
-        }
-        return 0;
-    }
-    if (f[2].ptr + 2 != f[2].end)
-        goto err;
-    c = category_decode_fast(f[2].ptr[0], f[2].ptr[1]);
-    if (c == (category_t)-1)
-        goto err;
-    if (fr != e->lastc + 1) {
-        if (fr < e->lastc + 1)
+    unsigned int r, first, last;
+    category_t cat;
+    mapbuilder_init(&m, CAT_Cn);
+    fl = datafile_open("UnicodeData.txt");
+    while ((r = datafile_read(fl, &first, &last, f))) {
+        if (f[2].ptr + 2 != f[2].end)
             goto err;
-        e->cat = c;
-        e->first = fr;
-        e->last = la;
-        *category = CAT_Cn;
-        *first = e->lastc + 1;
-        *last = fr - 1;
-    } else {
-        *category = c;
-        *first = fr;
-        *last = la;
+        cat = category_decode_fast(f[2].ptr[0], f[2].ptr[1]);
+        if (cat == (category_t)-1)
+            goto err;
+        mapbuilder_insert(&m, first, last, cat);
     }
-    e->lastc = la;
-    return 1;
+    return mapbuilder_finish(&m);
 err:
     fputs("Invalid category in data file\n", stderr);
     exit(1);
@@ -185,39 +131,9 @@ err:
 struct set *
 category_getchars(unsigned int catset)
 {
-    unsigned int alloc = 32, count = 0;
-    struct set *restrict s = set_create(32), *s2;
-    unsigned int cfirst, clast, afirst = -1, alast = -1, r;
-    category_t ccat;
-    struct category_enumerator e;
-    category_enumerator_init(&e);
-    do {
-        r = category_enumerator_next(&e, &cfirst, &clast, &ccat);
-        if (r && catset & (1U << (unsigned)ccat)) {
-            if (afirst == (unsigned int)-1)
-                afirst = cfirst;
-            alast = clast;
-        } else {
-            if (afirst != (unsigned int)-1) {
-                if (count >= alloc) {
-                    s2 = set_create(alloc * 2);
-                    alloc = alloc * 2;
-                    memcpy(s2->r, s->r, count * sizeof(*s->r));
-                    free(s);
-                    s = s2;
-                }
-                s->r[count].first = afirst;
-                s->r[count].last = alast;
-                count += 1;
-                afirst = -1;
-            }
-        }
-    } while (r);
-    category_enumerator_destroy(&e);
-    s->length = count;
-    return s;
+    struct map *map = category_getmap();
+    return map_preimage(map, catset);
 }
-
 
 struct set *
 category_getchars2(unsigned int n, unsigned char **names)
