@@ -88,12 +88,64 @@ category_makeset(unsigned int n, unsigned char **names)
     unsigned int s = 0, i, m;
     category_t c;
     for (i = 0; i < n; ++i) {
-        c = category_decode(names[i]);
-        if (c == (category_t)-1) {
-            fprintf(stderr, "Invalid category: %s\n", (char *)names[i]);
-            exit(1);
+        if (!names[i][0]) {
+            goto invalid;
+        } else if (!names[i][1]) {
+            switch (names[i][0]) {
+            case 'L':
+                m = (1U << CAT_Lu) |
+                    (1U << CAT_Ll) |
+                    (1U << CAT_Lm) |
+                    (1U << CAT_Lo);
+                break;
+            case 'M':
+                m = (1U << CAT_Mn) |
+                    (1U << CAT_Mc) |
+                    (1U << CAT_Me);
+                break;
+            case 'N':
+                m = (1U << CAT_Nd) |
+                    (1U << CAT_Nl) |
+                    (1U << CAT_No);
+                break;
+            case 'P':
+                m = (1U << CAT_Pc) |
+                    (1U << CAT_Pd) |
+                    (1U << CAT_Ps) |
+                    (1U << CAT_Pe) |
+                    (1U << CAT_Pi) |
+                    (1U << CAT_Pf) |
+                    (1U << CAT_Po);
+                break;
+            case 'S':
+                m = (1U << CAT_Sm) |
+                    (1U << CAT_Sc) |
+                    (1U << CAT_Sk) |
+                    (1U << CAT_So);
+                break;
+            case 'Z':
+                m = (1U << CAT_Zs) |
+                    (1U << CAT_Zl) |
+                    (1U << CAT_Zp);
+                break;
+            case 'C':
+                m = (1U << CAT_Cc) |
+                    (1U << CAT_Cf) |
+                    (1U << CAT_Cs) |
+                    (1U << CAT_Co) |
+                    (1U << CAT_Cn);
+                break;
+            default:
+                goto invalid;
+            }
+        } else if (!names[i][2]) {
+            c = category_decode_fast(names[i][0], names[i][1]);
+            if (c == (category_t)-1)
+                goto invalid;
+            m = 1U << (unsigned)c;
+        } else {
+            goto invalid;
         }
-        m = 1U << (unsigned)c;
         if (s & m) {
             fprintf(stderr, "Warning: duplicate category %s\n",
                     (char *)names[i]);
@@ -101,6 +153,9 @@ category_makeset(unsigned int n, unsigned char **names)
         s |= m;
     }
     return s;
+invalid:
+    fprintf(stderr, "Invalid category: %s\n", (char *)names[i]);
+    exit(1);
 }
 
 struct map *
