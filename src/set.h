@@ -59,7 +59,7 @@ setbuilder_insert(struct setbuilder *restrict s,
     if (s->clast == first - 1) {
         s->clast = last;
     } else {
-        if (s->clast != (unsigned int)-1) {
+        if (s->clast != (unsigned int)-2) {
             if (s->size + 1 > s->alloc) {
                 unsigned int nalloc = s->alloc ? s->alloc * 2 : 16;
                 s->set = set_resize(s->set, nalloc);

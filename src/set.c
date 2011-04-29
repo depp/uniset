@@ -184,8 +184,8 @@ setbuilder_init(struct setbuilder *restrict s)
 {
     s->alloc = 0;
     s->size = 0;
-    s->cfirst = -1;
-    s->clast = -1;
+    s->cfirst = 0;
+    s->clast = -2;
     s->set = 0;
 }
 
