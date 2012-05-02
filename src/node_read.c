@@ -180,6 +180,7 @@ node_read_atom(struct tokenizer *restrict t)
             }
             node_read_strlist(&n->strlist, p, t->tok.datae);
         } else {
+            n->type = NODE_RANGE;
             if (node_tokcmp(&t->tok, "all"))
                 node_read_all(&n->range);
             else
