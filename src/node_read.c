@@ -81,13 +81,6 @@ node_read_strlist(struct node_strlist *restrict n,
     }
 }
 
-static void
-node_read_all(struct node_range *restrict n)
-{
-    n->first = 0;
-    n->last = 0x10ffff;
-}
-
 static unsigned int
 node_read_char(unsigned char *start, unsigned char *end)
 {
@@ -181,10 +174,15 @@ node_read_atom(struct tokenizer *restrict t)
             node_read_strlist(&n->strlist, p, t->tok.datae);
         } else {
             n->type = NODE_RANGE;
-            if (node_tokcmp(&t->tok, "all"))
-                node_read_all(&n->range);
-            else
+            if (node_tokcmp(&t->tok, "all")) {
+                n->range.first = 0;
+                n->range.last = 0x10ffff;
+            } else if (node_tokcmp(&t->tok, "ascii")) {
+                n->range.first = 0;
+                n->range.last = 0x7f;
+            } else {
                 node_read_range(&n->range, t->tok.datap, t->tok.datae);
+            }
         }
         node_read_token(t);
         return n;

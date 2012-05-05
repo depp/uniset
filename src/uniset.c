@@ -27,6 +27,7 @@ static char const HELP[] =
 "  U+XXXX             : Individual character\n"
 "  U+XXXX..U+XXXX     : Character range\n"
 "  all                : All characters, U+0000..U+10FFFF\n"
+"  ascii              : 7-bit characters, U+0000..U+007F\n"
 "  cat:CAT1,CAT2,...  : General category (Lu,Ll,...)\n"
 "  eaw:W1,W2,...      : East Asian width (F,H,W,Na,A,N)\n"
 ;
