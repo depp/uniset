@@ -95,6 +95,7 @@ category_makeset(unsigned int n, unsigned char **names)
             case 'L':
                 m = (1U << CAT_Lu) |
                     (1U << CAT_Ll) |
+                    (1U << CAT_Lt) |
                     (1U << CAT_Lm) |
                     (1U << CAT_Lo);
                 break;
