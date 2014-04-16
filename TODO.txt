@@ -3,7 +3,6 @@ Uniset: TODO list
 
 * Parse other character attributes besides General Category
 * Obviate the need to specify UNICODE_DIR environment variable
-* Add --32 output format
 * Add --version option
 * Write some unit tests
 * Improve error messages for syntax errors

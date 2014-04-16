@@ -44,6 +44,9 @@ void
 set_print16(FILE *f, struct set *x);
 
 void
+set_print32(FILE *f, struct set *x);
+
+void
 setbuilder_init(struct setbuilder *restrict s);
 
 void

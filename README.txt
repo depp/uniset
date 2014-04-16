@@ -180,8 +180,7 @@ character is a member of a set:
     }
 
 The '--32' option specifies a C-style array of 32-bit unsigned
-integers.  Each entry is a range of characters.  NOTE: This option is
-not currently implemented.
+integers.  Each entry is a range of characters.
 
     $ uniset --32 cat:Zs
     { 32, 32 },
