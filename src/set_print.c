@@ -52,8 +52,8 @@ set_print_n(FILE *f, struct set *x, int planes,
             pf = xp->first >> 16;
             pl = xp->last >> 16;
             for (unsigned int p = pf; p <= pl; ++p) {
-                fr = p == pf ? xp->first : 0;
-                la = p == pl ? xp->last : 0;
+                fr = p == pf ? xp->first : p << 16;
+                la = p == pl ? xp->last : p << 16 | 0xFFFF;
                 if (plane) fputs(",\n", f);
                 plane = 1;
                 fprintf(f, format, fr & mask, la & mask);
