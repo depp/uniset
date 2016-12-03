@@ -10,7 +10,7 @@ static char const HELP[] =
 "Options:\n"
 "  --help         : show this help screen\n"
 "  --16           : use planar output format\n"
-"  --32           : use planar output format in hex\n"
+"  --32           : use planar output format in hex without plane offsets\n"
 "\n"
 "Output format:\n"
 "  Sorted list of non-overlapping ranges of characters in the set.\n"

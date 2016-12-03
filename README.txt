@@ -180,12 +180,11 @@ character is a member of a set:
     }
 
 The '--32' option specifies a C-style array of 32-bit unsigned
-integers.  Each entry is a range of characters.
+integers.  Each entry is a range of characters.  The plane offsets
+are not printed because they're not required to search the 32-bit
+table.  A pair may cross a Unicode plane boundary.
 
     $ uniset --32 cat:Zs
-    { /* plane 0 */ 0, 7 },
-    { /* plane 1 */ 0, 0 },
-    <15 repeated entries removed>
     { 0x0020, 0x0020 },
     { 0x00A0, 0x00A0 },
     { 0x1680, 0x1680 },
