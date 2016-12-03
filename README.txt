@@ -140,8 +140,8 @@ planes, and each entry specifies a pair of offsets into the remainder
 of the table.
 
     $ uniset --16 cat:Zs
-    { /* plane */ 0, 8 },
-    { /* plane */ 0, 0 },
+    { /* plane 0 */ 0, 8 },
+    { /* plane 1 */ 0, 0 },
     <15 repeated entries removed>
     { 32, 32 },
     { 160, 160 },
@@ -183,8 +183,8 @@ The '--32' option specifies a C-style array of 32-bit unsigned
 integers.  Each entry is a range of characters.
 
     $ uniset --32 cat:Zs
-    { /* plane */ 0, 7 },
-    { /* plane */ 0, 0 },
+    { /* plane 0 */ 0, 7 },
+    { /* plane 1 */ 0, 0 },
     <15 repeated entries removed>
     { 0x0020, 0x0020 },
     { 0x00A0, 0x00A0 },

@@ -37,7 +37,8 @@ set_print_n(FILE *f, struct set *x, const char *format, unsigned int mask)
     }
     for (plane = 0; plane < 17; ++plane) {
         if (plane) fputs(",\n", f);
-        fprintf(f, "{ /* plane */ %u, %u }", ranges[plane][0], ranges[plane][1]);
+        fprintf(f, "{ /* plane %u */ %u, %u }", plane,
+                ranges[plane][0], ranges[plane][1]);
     }
     for (xp = xs; xp != xe; ++xp) {
         if (((xp->first ^ xp->last) >> 16) == 0) {
