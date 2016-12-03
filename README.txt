@@ -140,8 +140,8 @@ planes, and each entry specifies a pair of offsets into the remainder
 of the table.
 
     $ uniset --16 cat:Zs
-    { 0, 8 },
-    { 0, 0 },
+    { /* plane */ 0, 8 },
+    { /* plane */ 0, 0 },
     <15 repeated entries removed>
     { 32, 32 },
     { 160, 160 },
