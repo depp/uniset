@@ -1,21 +1,19 @@
-Uniset: Compute sets of unicode code points
-===========================================
+# Uniset: Compute sets of unicode code points
+
 
 Uniset is a simple command-line tool for computing sets of Unicode
 code points.  Its main goal is to support the development of fast
 Unicode-aware parsers.
 
-Warning!
---------
+## Warning!
 
-This software is currently "early-beta".  It may crash or generate
+This software is currently “early-beta”.  It may crash or generate
 incorrect results.  It has very few features.  It was written in a
 single day and only tested manually.
 
-Usage
------
+## Usage
 
-uniset [OPT..] [EXPR]
+    uniset [OPT..] [EXPR]
 
 Prints the set of Unicode characters specified by EXPR.  The
 UNICODE_DIR environment variable must point to a directory containing
@@ -23,9 +21,9 @@ Unicode data tables.
 
 In examples below, set expressions are quoted or left unquoted
 somewhat arbitrarily.  In most situations, the quoting is irrelevant.
-However, remember that '*' is a special character in the shell.
-Single quote marks <'> are preferred over double quote marks <">,
-because a single quote marks <'> disable shell expansion.
+However, remember that `'*'` is a special character in the shell.
+Single quote marks `<'>` are preferred over double quote marks `<">`,
+because a single quote marks `<'>` disable shell expansion.
 
 These three invocations are equivalent:
 
@@ -39,8 +37,7 @@ However, these three invocations are not:
     uniset "cat:Ll,Lu * 0..FF"		# not preferred
     uniset 'cat:Ll,Lu * 0..FF'  	# ok
 
-Set operations
---------------
+## Set operations
 
 Sets may be combined using simple set operations.  Note that the
 operators (+, -, *, !) must be separated from other tokens (besides
@@ -68,8 +65,7 @@ Note that unlike ordinary algebra, the following are not equivalent:
 
     a + b - c    vs.    a - c + b
 
-Basic sets
-----------
+## Basic sets
 
 Individual characters and ranges of characters can be specified in
 hexadecimal.  Hexadecimal was chosen because Unicode characters are
@@ -90,11 +86,10 @@ East asian width:
 
     eaw:W1,W2,...
 
-ECMAScript example
-------------------
+## ECMAScript example
 
 The 5th edition of ECMAScript specifies that source files are
-Unicode.  Identifiers may start with letters, '$', '_', and escape
+Unicode.  Identifiers may start with letters, `'$'`, `'_'`, and escape
 sequences.  The set of Unicode letters, according to the ECMAScript
 standard, is given by the following command:
 
@@ -118,8 +113,7 @@ characters from a set by subtracting them at the end.  For example,
 
     uniset 'cat:Lu,Ll,Lt,Lm,Lo,Nl - 0..7f'
 
-Output formats
---------------
+## Output formats
 
 By default, uniset outputs a sorted list of non-overlapping ranges of
 characters in the set, in hexadecimal.  For example,
@@ -134,7 +128,7 @@ characters in the set, in hexadecimal.  For example,
     205f
     3000
 
-The '--16' option specifies a C-style array of pairs of 16-bit
+The `--16` option specifies a C-style array of pairs of 16-bit
 unsigned integers.  The first 17 entries correspond to the 17 Unicode
 planes, and each entry specifies a pair of offsets into the remainder
 of the table.
@@ -152,12 +146,12 @@ of the table.
     { 8287, 8287 },
     { 12288, 12288 }
 
-Note that the category 'Zs' only contains characters in the first
+Note that the category Zs only contains characters in the first
 plane, so the other 16 planes have zero entries.  The entry for plane
 0, { 0, 8 }, indicates that the first entry is at 17 + 0 and the entry
 on past the end is at 17 + 8.
 
-But if you don't like reading English, here is the C code to test if a
+But if you don’t like reading English, here is the C code to test if a
 character is a member of a set:
 
     bool uniset_test(uint16_t const set[][2], uint32_t c)
@@ -179,9 +173,9 @@ character is a member of a set:
         return false;
     }
 
-The '--32' option specifies a C-style array of 32-bit unsigned
+The `--32` option specifies a C-style array of 32-bit unsigned
 integers.  Each entry is a range of characters.  The plane offsets
-are not printed because they're not required to search the 32-bit
+are not printed because they’re not required to search the 32-bit
 table.  A pair may cross a Unicode plane boundary.
 
     $ uniset --32 cat:Zs
@@ -193,7 +187,7 @@ table.  A pair may cross a Unicode plane boundary.
     { 0x205F, 0x205F },
     { 0x3000, 0x3000 }
 
-Here is the C code for checking membership, where 'n' is the array
+Here is the C code for checking membership, where `n` is the array
 size:
 
     bool uniset_test(uint32_t n, uint32_t const set[][2], uint32_t c)
@@ -211,7 +205,7 @@ size:
         return false;
     }
 
-The typical way to use the '--16' or '--32' options is as an include
+The typical way to use the `--16` or `--32` options is as an include
 file.  For example,
 
     const uint16_t UNICODE_LETTER[][2] = {
