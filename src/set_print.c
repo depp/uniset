@@ -74,9 +74,3 @@ set_print32(FILE *f, struct set *x)
 {
     set_print_n(f, x, 0, "{ 0x%04X, 0x%04X }", 0xFFFFFFFF);
 }
-
-void
-set_print32p(FILE *f, struct set *x)
-{
-    set_print_n(f, x, 1, "{ 0x%04X, 0x%04X }", 0xFFFFFFFF);
-}

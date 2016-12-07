@@ -11,7 +11,6 @@ static char const HELP[] =
 "  --help         : show this help screen\n"
 "  --16           : use planar output format\n"
 "  --32           : use planar output format in hex without plane offsets\n"
-"  --32p          : like --32, but include the plane offsets\n"
 "\n"
 "Output format:\n"
 "  Sorted list of non-overlapping ranges of characters in the set.\n"
@@ -51,8 +50,6 @@ int main(int argc, char *argv[])
             format = 1;
         } else if (!strcmp(opt, "32")) {
             format = 2;
-        } else if (!strcmp(opt, "32p")) {
-            format = 3;
         } else if (!strcmp(opt, "help")) {
             fputs(HELP, stderr);
             return 1;
@@ -91,9 +88,6 @@ int main(int argc, char *argv[])
         break;
     case 2:
         set_print32(stdout, s);
-        break;
-    case 3:
-        set_print32p(stdout, s);
         break;
     }
 

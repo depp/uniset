@@ -211,21 +211,6 @@ size:
         return false;
     }
 
-The '--32p' option specifies a C-style array of 32-bit unsigned
-integers.  Each entry is a range of characters.  The plane offsets
-are prepended as with '--16'.  A pair never crosses a Unicode plane
-boundary.
-
-    $ uniset --32p cat:Co
-    { /* plane 0 */ 0, 1 },
-    { /* plane 1 */ 0, 0 },
-    <13 repeated entries removed>
-    { /* plane 15 */ 1, 2 },
-    { /* plane 16 */ 2, 3 },
-    { 0xE000, 0xF8FF },
-    { 0xF0000, 0xFFFFD },
-    { 0x100000, 0x10FFFD }
-
 The typical way to use the '--16' or '--32' options is as an include
 file.  For example,
 
