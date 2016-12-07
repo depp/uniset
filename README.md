@@ -15,8 +15,8 @@ single day and only tested manually.
 
     uniset [OPT..] [EXPR]
 
-Prints the set of Unicode characters specified by EXPR.  The
-UNICODE_DIR environment variable must point to a directory containing
+Prints the set of Unicode characters specified by `EXPR`.  The
+`UNICODE_DIR` environment variable must point to a directory containing
 Unicode data tables.
 
 In examples below, set expressions are quoted or left unquoted
@@ -58,7 +58,7 @@ is the same as
 
     (! a) + (b * (c + d)) + ((! e) * f)
 
-The --verbose flag will cause uniset to print the expression to the
+The `--verbose` flag will cause uniset to print the expression to the
 standard error stream.
 
 Note that unlike ordinary algebra, the following are not equivalent:
