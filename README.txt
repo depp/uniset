@@ -140,8 +140,8 @@ planes, and each entry specifies a pair of offsets into the remainder
 of the table.
 
     $ uniset --16 cat:Zs
-    { 0, 8 },
-    { 0, 0 },
+    { /* plane 0 */ 0, 8 },
+    { /* plane 1 */ 0, 0 },
     <15 repeated entries removed>
     { 32, 32 },
     { 160, 160 },
@@ -180,17 +180,18 @@ character is a member of a set:
     }
 
 The '--32' option specifies a C-style array of 32-bit unsigned
-integers.  Each entry is a range of characters.
+integers.  Each entry is a range of characters.  The plane offsets
+are not printed because they're not required to search the 32-bit
+table.  A pair may cross a Unicode plane boundary.
 
     $ uniset --32 cat:Zs
-    { 32, 32 },
-    { 160, 160 },
-    { 5760, 5760 },
-    { 6158, 6158 },
-    { 8192, 8202 },
-    { 8239, 8239 },
-    { 8287, 8287 },
-    { 12288, 12288 }
+    { 0x0020, 0x0020 },
+    { 0x00A0, 0x00A0 },
+    { 0x1680, 0x1680 },
+    { 0x2000, 0x200A },
+    { 0x202F, 0x202F },
+    { 0x205F, 0x205F },
+    { 0x3000, 0x3000 }
 
 Here is the C code for checking membership, where 'n' is the array
 size:
@@ -209,6 +210,21 @@ size:
         }
         return false;
     }
+
+The '--32p' option specifies a C-style array of 32-bit unsigned
+integers.  Each entry is a range of characters.  The plane offsets
+are prepended as with '--16'.  A pair never crosses a Unicode plane
+boundary.
+
+    $ uniset --32p cat:Co
+    { /* plane 0 */ 0, 1 },
+    { /* plane 1 */ 0, 0 },
+    <13 repeated entries removed>
+    { /* plane 15 */ 1, 2 },
+    { /* plane 16 */ 2, 3 },
+    { 0xE000, 0xF8FF },
+    { 0xF0000, 0xFFFFD },
+    { 0x100000, 0x10FFFD }
 
 The typical way to use the '--16' or '--32' options is as an include
 file.  For example,

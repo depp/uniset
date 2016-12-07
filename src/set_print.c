@@ -12,44 +12,51 @@ set_print(FILE *f, struct set *x)
     }
 }
 
-void
-set_print16(FILE *f, struct set *x)
+static void
+set_print_n(FILE *f, struct set *x, int planes,
+            const char *format, unsigned int mask)
 {
     unsigned int ranges[17][2];
-    unsigned int pos, plane, fr, la, pf, pl;
+    unsigned int pos, plane = 0, fr, la, pf, pl;
     struct range *xs = x->r, *xe = x->r + x->length, *xp;
-    xp = xs;
-    pos = 0;
-    for (plane = 0; plane < 17; ++plane) {
-        if (xp == xe || (xp->first >> 16) > plane) {
-            ranges[plane][0] = 0;
-            ranges[plane][1] = 0;
-        } else {
-            ranges[plane][0] = pos;
-            while (xp != xe && (xp->last >> 16) == plane) {
-                pos++;
-                xp++;
+    if (planes) {
+        xp = xs;
+        pos = 0;
+        for (plane = 0; plane < 17; ++plane) {
+            if (xp == xe || (xp->first >> 16) > plane) {
+                ranges[plane][0] = 0;
+                ranges[plane][1] = 0;
+            } else {
+                ranges[plane][0] = pos;
+                while (xp != xe && (xp->last >> 16) == plane) {
+                    pos++;
+                    xp++;
+                }
+                if (xp != xe && (xp->first >> 16) <= plane)
+                    pos++;
+                ranges[plane][1] = pos;
             }
-            if (xp != xe && (xp->first >> 16) <= plane)
-                pos++;
-            ranges[plane][1] = pos;
+        }
+        for (plane = 0; plane < 17; ++plane) {
+            if (plane) fputs(",\n", f);
+            fprintf(f, "{ /* plane %u */ %u, %u }", plane,
+                    ranges[plane][0], ranges[plane][1]);
         }
     }
-    for (plane = 0; plane < 17; ++plane) {
-        if (plane) fputs(",\n", f);
-        fprintf(f, "{ %u, %u }", ranges[plane][0], ranges[plane][1]);
-    }
     for (xp = xs; xp != xe; ++xp) {
-        if (((xp->first ^ xp->last) >> 16) == 0) {
-            fprintf(f, ",\n{ %u, %u }",
-                    xp->first & 0xffff, xp->last & 0xffff);
+        if (!planes || ((xp->first ^ xp->last) >> 16) == 0) {
+            if (plane) fputs(",\n", f);
+            plane = 1;
+            fprintf(f, format, xp->first & mask, xp->last & mask);
         } else {
             pf = xp->first >> 16;
             pl = xp->last >> 16;
-            for (plane = pf; plane <= pl; ++plane) {
-                fr = plane == pf ? xp->first : 0;
-                la = plane == pl ? xp->last : 0;
-                fprintf(f, ",\n{ %u, %u }", fr & 0xffff, la & 0xffff);
+            for (unsigned int p = pf; p <= pl; ++p) {
+                fr = p == pf ? xp->first : p << 16;
+                la = p == pl ? xp->last : p << 16 | 0xFFFF;
+                if (plane) fputs(",\n", f);
+                plane = 1;
+                fprintf(f, format, fr & mask, la & mask);
             }
         }
     }
@@ -57,46 +64,19 @@ set_print16(FILE *f, struct set *x)
 }
 
 void
+set_print16(FILE *f, struct set *x)
+{
+    set_print_n(f, x, 1, "{ %u, %u }", 0xFFFF);
+}
+
+void
 set_print32(FILE *f, struct set *x)
 {
-    unsigned int ranges[17][2];
-    unsigned int pos, plane, fr, la, pf, pl;
-    struct range *xs = x->r, *xe = x->r + x->length, *xp;
-    xp = xs;
-    pos = 0;
-    for (plane = 0; plane < 17; ++plane) {
-        if (xp == xe || (xp->first >> 16) > plane) {
-            ranges[plane][0] = 0;
-            ranges[plane][1] = 0;
-        } else {
-            ranges[plane][0] = pos;
-            while (xp != xe && (xp->last >> 16) == plane) {
-                pos++;
-                xp++;
-            }
-            if (xp != xe && (xp->first >> 16) <= plane)
-                pos++;
-            ranges[plane][1] = pos;
-        }
-    }
-    for (plane = 0; plane < 17; ++plane) {
-        if (plane) fputs(",\n", f);
-        fprintf(f, "{ /* plane */ 0x%X, 0x%X }", ranges[plane][0], ranges[plane][1]);
-    }
-    for (xp = xs; xp != xe; ++xp) {
-        if (((xp->first ^ xp->last) >> 16) == 0) {
-            fprintf(f, ",\n{ 0x%04X, 0x%04X }",
-                    xp->first, xp->last);
-        } else {
-            pf = xp->first >> 16;
-            pl = xp->last >> 16;
-            for (plane = pf; plane <= pl; ++plane) {
-                fr = plane == pf ? xp->first : 0;
-                la = plane == pl ? xp->last : 0;
-                fprintf(f, ",\n{ 0x%04X, 0x%04X }",
-                        fr, la);
-            }
-        }
-    }
-    putc('\n', f);
+    set_print_n(f, x, 0, "{ 0x%04X, 0x%04X }", 0xFFFFFFFF);
+}
+
+void
+set_print32p(FILE *f, struct set *x)
+{
+    set_print_n(f, x, 1, "{ 0x%04X, 0x%04X }", 0xFFFFFFFF);
 }
