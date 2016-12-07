@@ -27,15 +27,15 @@ because a single quote marks `<'>` disable shell expansion.
 
 These three invocations are equivalent:
 
-    uniset cat:Zs + FEFF - 0..7F	# ok
+    uniset cat:Zs + FEFF - 0..7F        # ok
     uniset "cat:Zs + FEFF - 0..7F"      # ok
     uniset 'cat:Zs + FEFF - 0..7F'      # ok
 
 However, these three invocations are not:
 
-    uniset cat:Ll,Lu * 0..FF		# not ok
-    uniset "cat:Ll,Lu * 0..FF"		# not preferred
-    uniset 'cat:Ll,Lu * 0..FF'  	# ok
+    uniset cat:Ll,Lu * 0..FF        # not ok
+    uniset "cat:Ll,Lu * 0..FF"      # not preferred
+    uniset 'cat:Ll,Lu * 0..FF'      # ok
 
 ## Set operations
 
@@ -160,7 +160,7 @@ character is a member of a set:
         if (p > 16)
             return false;
         unsigned int l = set[p][0] + 17, r = set[p][1] + 17;
-	c &= 0xffff;
+        c &= 0xffff;
         while (l < r) {
             unsigned int m = (l + r) / 2;
             if (c < set[m][0])
