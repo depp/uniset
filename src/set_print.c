@@ -13,8 +13,7 @@ set_print(FILE *f, struct set *x)
 }
 
 static void
-set_print_n(FILE *f, struct set *x, int planes,
-            const char *format, unsigned int mask)
+set_print_n(FILE *f, struct set *x, int planes, unsigned int mask)
 {
     unsigned int ranges[17][2];
     unsigned int pos, plane = 0, fr, la, pf, pl;
@@ -47,7 +46,7 @@ set_print_n(FILE *f, struct set *x, int planes,
         if (!planes || ((xp->first ^ xp->last) >> 16) == 0) {
             if (plane) fputs(",\n", f);
             plane = 1;
-            fprintf(f, format, xp->first & mask, xp->last & mask);
+            fprintf(f, "{ %u, %u }", xp->first & mask, xp->last & mask);
         } else {
             pf = xp->first >> 16;
             pl = xp->last >> 16;
@@ -56,7 +55,7 @@ set_print_n(FILE *f, struct set *x, int planes,
                 la = p == pl ? xp->last : p << 16 | 0xFFFF;
                 if (plane) fputs(",\n", f);
                 plane = 1;
-                fprintf(f, format, fr & mask, la & mask);
+                fprintf(f, "{ %u, %u }", fr & mask, la & mask);
             }
         }
     }
@@ -66,11 +65,11 @@ set_print_n(FILE *f, struct set *x, int planes,
 void
 set_print16(FILE *f, struct set *x)
 {
-    set_print_n(f, x, 1, "{ %u, %u }", 0xFFFF);
+    set_print_n(f, x, 1, 0xFFFF);
 }
 
 void
 set_print32(FILE *f, struct set *x)
 {
-    set_print_n(f, x, 0, "{ 0x%04X, 0x%04X }", 0xFFFFFFFF);
+    set_print_n(f, x, 0, 0xFFFFFFFF);
 }
